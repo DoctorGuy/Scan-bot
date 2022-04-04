@@ -1,0 +1,39 @@
+# passion bot
+from symtable import Symbol
+import pandas as pd 
+import requests as rq
+import json
+from twilio.rest import Client as cl
+# basic pieces here just how do we pull data into a json() will need for later on binance
+bin_url = 'https://api.binance.com'
+bi_path = '/api/v3/ticker/price'
+para = '?symbol=BTCUSDT&interval=1m'
+rbi = rq.get(bin_url+bi_path)
+
+# basic pull from kucoin detailing how to set params in line
+ku_url = 'https://api.kucoin.com'
+ku_path = '/api/v1/market/allTickers'
+rku = rq.get(ku_url+ku_path, params= {'symbol':'BTC-USDT'})
+
+#transform to dict then df
+bidf = pd.DataFrame((rbi.json()))
+kudf =pd.DataFrame((rku.json()))
+
+bidf.to_csv(##csv push)
+kudf.to_csv(##csv push)
+
+account_sid = 
+auth_token = 
+twilio_number = 
+my_cell = 
+
+
+
+client = cl(account_sid, auth_token)
+message = client.messages.create(
+    body = 'Brother Eth is crashing start moving stuff',
+    from_= twilio_number, 
+    to=my_cell
+)
+
+print(message.body)
