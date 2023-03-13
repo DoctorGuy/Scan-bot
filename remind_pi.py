@@ -29,7 +29,7 @@ import httplib2
 import numpy as np
 import oauth2client
 import pytz
-#import unicornhat as #lights
+import unicornhat as lights
 from apiclient import discovery
 from dateutil import parser
 from oauth2client import client
@@ -197,19 +197,27 @@ except ImportError:
 def get_credentials():
     # taken from https://developers.google.com/google-apps/calendar/quickstart/python
     global credentials
-
+    SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+    creds = None
     if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    if not creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-    else:
+        with open('token.json', 'r') as token:
+            try:
+                creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+                print(f'Loaded credentials from token file: {creds}')
+            except json.JSONDecodeError as e:
+                print(f'Error loading JSON from token file: {e}')
+    if not creds or not creds.valid:
         flow = InstalledAppFlow.from_client_secrets_file(
             'client_secret.json', SCOPES)
         creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-    with open('token.json', 'w') as token:
+        with open('token.json', 'w') as token:
             token.write(creds.to_json())
+            print(f'Saved credentials to token file: {creds}')
     return creds
+
+
+
 
 
 
@@ -436,10 +444,9 @@ flash_all(1, 1, GREEN)
 try:
     # Initialize the Google Calendar API stuff
     print('Initializing the Google Calendar API')
-    socket.setdefaulttimeout(10)  # 10 seconds
-    credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
-    service = discovery.build('calendar', 'v3', http=http)
+    socket.setdefaulttimeout(50)  # 10 seconds
+    creds = get_credentials()
+    service = build('calendar', 'v3', credentials=creds)
 except Exception as e:
     print('\nException type:', type(e))
     # not much else we can do here except to skip this attempt and try again later
