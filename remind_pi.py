@@ -16,7 +16,8 @@
 # todo: Add configurable option for ignoring tentative appointments
 
 from __future__ import print_function
-
+import requests
+from requests.auth import HTTPBasicAuth
 import colorsys
 import datetime
 import math
@@ -24,12 +25,12 @@ import os
 import socket
 import sys
 import time
-
+import unicornhat as lights
 import httplib2
 import numpy as np
 import oauth2client
 import pytz
-import unicornhat as lights
+#import unicornhat as #lights
 from apiclient import discovery
 from dateutil import parser
 from oauth2client import client
@@ -197,27 +198,19 @@ except ImportError:
 def get_credentials():
     # taken from https://developers.google.com/google-apps/calendar/quickstart/python
     global credentials
-    SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
-    creds = None
+
     if os.path.exists('token.json'):
-        with open('token.json', 'r') as token:
-            try:
-                creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-                print(f'Loaded credentials from token file: {creds}')
-            except json.JSONDecodeError as e:
-                print(f'Error loading JSON from token file: {e}')
-    if not creds or not creds.valid:
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    if not creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+    else:
         flow = InstalledAppFlow.from_client_secrets_file(
             'client_secret.json', SCOPES)
         creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.json', 'w') as token:
+    with open('token.json', 'w') as token:
             token.write(creds.to_json())
-            print(f'Saved credentials to token file: {creds}')
     return creds
-
-
-
 
 
 
@@ -364,6 +357,52 @@ def get_next_event(search_limit):
     # if we got this far and haven't returned anything, then there's no appointments in the specified time
     # range, or we had an error, so...
     return None
+import unicornhat as unicorn
+import time
+import datetime
+import requests
+
+# Function to display temperature on Unicorn HAT
+def display_temperature(temp):
+    # Convert temperature to Fahrenheit
+    temp = (temp * 1.8) + 32
+    # Split temperature into two digits
+    list_of_digits = []
+    if temp > 9:
+        for i in str(int(temp)):
+            list_of_digits.append(int(i))
+        num1 = list_of_digits[0]
+        num2 = list_of_digits[1]
+    else:
+        num1 = 0
+        num2 = int(temp)
+
+    # Set Unicorn HAT colors
+    R = (255, 0, 0) # Red
+    Y = (255, 255, 0) # Yellow
+    G = (0, 255, 0) # Green
+    B = (0, 0, 255) # Blue
+    O = (255, 140, 0) # Orange
+
+    # Set color for each digit on the Unicorn HAT
+    colors = {
+        0: R,
+        1: Y,
+        2: G,
+        3: B,
+        4: O,
+        5: R,
+        6: Y,
+        7: G,
+        8: B,
+        9: O
+    }
+
+    # Display the two digits on the Unicorn HAT
+    unicorn.clear()
+    unicorn.set_pixel(2, 0, colors[num1][0], colors[num1][1], colors[num1][2])
+    unicorn.set_pixel(5, 0, colors[num2][0], colors[num2][1], colors[num2][2])
+    unicorn.show()
 
 
 def main():
@@ -375,13 +414,21 @@ def main():
     else:
         last_minute -= 1
 
+    # set up the API endpoint and parameters
+    api_endpoint = "http://api.weatherstack.com/current"
+
+    # get the initial temperature
+    r = requests.get('http://api.weatherstack.com/current?access_key=568a51fcb2400c0531e124cd508c373e&query=Seattle')
+    data = r.json()
+    temperature = data['current']['temperature'] 
+
     # infinite loop to continuously check Google Calendar for future entries
-    while 1:
+    while True:
         # get the current minute
         current_minute = datetime.datetime.now().minute
         # is it the same minute as the last time we checked?
         if current_minute != last_minute:
-            # reset last_minute to the current_minute, of course
+            # reset last_minute to the current_minute
             last_minute = current_minute
             # we've moved a minute, so we have work to do
             # get the next calendar event (within the specified time limit [in minutes])
@@ -411,16 +458,23 @@ def main():
                     do_swirl(int((4 - num_minutes) * 100))
                     # set the activity light to SUCCESS_COLOR (green by default)
                     set_activity_light(ORANGE, False)
+            # check the temperature if the next meeting is more than 15 minutes away
+            elif num_minutes > 15:
+                # get the latest temperature
+                r = requests.get('http://api.weatherstack.com/current?access_key=568a51fcb2400c0531e124cd508c373e&query=Seattle')
+                data = r.json()
+                temperature = data['current']['temperature'] 
+                # display the temperature on the unicorn pi hat
+                display_temperature(temperature)
         # wait a second then check again
-        # You can always increase the sleep value below to check less often
         time.sleep(1)
 
 
 # now tell the user what we're doing...
 print('\n')
 print(HASHES)
-print(HASH, 'Pi Remind                           ', HASH)
-print(HASH, 'By John M. Wargo (www.johnwargo.com)', HASH)
+print(HASH, 'Office Helper', HASH)
+print(HASH, 'By Elliott Wills', HASH)
 print(HASHES)
 
 # output whether reboot mode is enabled
@@ -444,9 +498,10 @@ flash_all(1, 1, GREEN)
 try:
     # Initialize the Google Calendar API stuff
     print('Initializing the Google Calendar API')
-    socket.setdefaulttimeout(50)  # 10 seconds
-    creds = get_credentials()
-    service = build('calendar', 'v3', credentials=creds)
+    socket.setdefaulttimeout(10)  # 10 seconds
+    credentials = get_credentials()
+    http = credentials.authorize(httplib2.Http())
+    service = discovery.build('calendar', 'v3', http=http)
 except Exception as e:
     print('\nException type:', type(e))
     # not much else we can do here except to skip this attempt and try again later
