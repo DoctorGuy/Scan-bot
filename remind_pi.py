@@ -198,19 +198,27 @@ except ImportError:
 def get_credentials():
     # taken from https://developers.google.com/google-apps/calendar/quickstart/python
     global credentials
-
+    SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+    creds = None
     if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    if not creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-    else:
+        with open('token.json', 'r') as token:
+            try:
+                creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+                print(f'Loaded credentials from token file: {creds}')
+            except json.JSONDecodeError as e:
+                print(f'Error loading JSON from token file: {e}')
+    if not creds or not creds.valid:
         flow = InstalledAppFlow.from_client_secrets_file(
             'client_secret.json', SCOPES)
         creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-    with open('token.json', 'w') as token:
+        with open('token.json', 'w') as token:
             token.write(creds.to_json())
+            print(f'Saved credentials to token file: {creds}')
     return creds
+
+
+
 
 
 
@@ -264,7 +272,244 @@ def has_reminder(event):
             return True
     # if we got this far, then there must not be a reminder set
     return False
+    
+def f_one():
+	##(X,Y,Color)
+	lights.set_pixel(1,2,255,0,255)
+	lights.set_pixel(0,3,255,0,255)
+	lights.set_pixel(1,3,255,0,255)
+	lights.set_pixel(1,4,255,0,255)
+	lights.set_pixel(1,5,255,0,255)
+	lights.set_pixel(1,6,255,0,255)
+	lights.set_pixel(0,6,255,0,255)
+	lights.set_pixel(2,6,255,0,255)
 
+def f_two():
+	lights.set_pixel(0,2,255,0,255)
+	lights.set_pixel(1,2,255,0,255)
+	lights.set_pixel(2,2,255,0,255)
+	lights.set_pixel(2,3,255,0,255)
+	lights.set_pixel(2,4,255,0,255)
+	lights.set_pixel(1,4,255,0,255)
+	lights.set_pixel(0,4,255,0,255)
+	lights.set_pixel(0,5,255,0,255)
+	lights.set_pixel(0,6,255,0,255)
+	lights.set_pixel(1,6,255,0,255)
+	lights.set_pixel(2,6,255,0,255)
+
+def f_three():
+	lights.set_pixel(0,2,255,0,255)
+	lights.set_pixel(1,2,255,0,255)
+	lights.set_pixel(2,2,255,0,255)
+	lights.set_pixel(2,3,255,0,255)
+	lights.set_pixel(2,4,255,0,255)
+	lights.set_pixel(1,4,255,0,255)
+	lights.set_pixel(0,4,255,0,255)
+	lights.set_pixel(2,5,255,0,255)
+	lights.set_pixel(2,6,255,0,255)
+	lights.set_pixel(0,6,255,0,255)
+	lights.set_pixel(1,6,255,0,255)
+	
+def f_four():
+	lights.set_pixel(0,2,255,0,255)
+	lights.set_pixel(0,3,255,0,255)
+	lights.set_pixel(0,4,255,0,255)
+	lights.set_pixel(1,4,255,0,255)
+	lights.set_pixel(2,4,255,0,255)
+	lights.set_pixel(2,3,255,0,255)
+	lights.set_pixel(2,2,255,0,255)
+	lights.set_pixel(2,5,255,0,255)
+	lights.set_pixel(2,6,255,0,255)
+	
+def f_five():
+	lights.set_pixel(0,2,255,0,255)
+	lights.set_pixel(1,2,255,0,255)
+	lights.set_pixel(2,2,255,0,255)
+	lights.set_pixel(0,3,255,0,255)
+	lights.set_pixel(0,4,255,0,255)
+	lights.set_pixel(1,4,255,0,255)
+	lights.set_pixel(2,4,255,0,255)
+	lights.set_pixel(2,5,255,0,255)
+	lights.set_pixel(2,6,255,0,255)
+	lights.set_pixel(0,6,255,0,255)
+	lights.set_pixel(1,6,255,0,255)
+	
+def f_six():
+	lights.set_pixel(0,2,255,0,255)
+	lights.set_pixel(0,3,255,0,255)
+	lights.set_pixel(0,4,255,0,255)
+	lights.set_pixel(0,5,255,0,255)
+	lights.set_pixel(0,6,255,0,255)
+	lights.set_pixel(1,6,255,0,255)
+	lights.set_pixel(2,6,255,0,255)
+	lights.set_pixel(2,5,255,0,255)
+	lights.set_pixel(2,4,255,0,255)
+	lights.set_pixel(1,4,255,0,255)
+	
+def f_seven():
+	lights.set_pixel(0,2,255,0,255)
+	lights.set_pixel(1,2,255,0,255)
+	lights.set_pixel(2,2,255,0,255)
+	lights.set_pixel(2,3,255,0,255)
+	lights.set_pixel(2,4,255,0,255)
+	lights.set_pixel(2,5,255,0,255)
+	lights.set_pixel(2,6,255,0,255)
+
+def f_eight():
+	lights.set_pixel(0,2,255,0,255)
+	lights.set_pixel(1,2,255,0,255)
+	lights.set_pixel(2,2,255,0,255)
+	lights.set_pixel(2,3,255,0,255)
+	lights.set_pixel(2,4,255,0,255)
+	lights.set_pixel(1,4,255,0,255)
+	lights.set_pixel(0,4,255,0,255)
+	lights.set_pixel(0,5,255,0,255)
+	lights.set_pixel(0,6,255,0,255)
+	lights.set_pixel(1,6,255,0,255)
+	lights.set_pixel(2,6,255,0,255)
+	lights.set_pixel(0,3,255,0,255)
+	lights.set_pixel(2,5,255,0,255)
+	
+	
+def f_nine():
+	lights.set_pixel(0,2,255,0,255)
+	lights.set_pixel(1,2,255,0,255)
+	lights.set_pixel(2,2,255,0,255)
+	lights.set_pixel(2,3,255,0,255)
+	lights.set_pixel(2,4,255,0,255)
+	lights.set_pixel(1,4,255,0,255)
+	lights.set_pixel(0,4,255,0,255)
+	lights.set_pixel(2,6,255,0,255)
+	lights.set_pixel(0,3,255,0,255)
+	lights.set_pixel(2,5,255,0,255)
+	
+def s_one():
+	##(X,Y,Color)
+	lights.set_pixel(5,2,0,255,0)
+	lights.set_pixel(4,3,0,255,0)
+	lights.set_pixel(5,3,0,255,0)
+	lights.set_pixel(5,4,0,255,0)
+	lights.set_pixel(5,5,0,255,0)
+	lights.set_pixel(5,6,0,255,0)
+	lights.set_pixel(4,6,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+
+def s_two():
+	lights.set_pixel(4,2,0,255,0)
+	lights.set_pixel(5,2,0,255,0)
+	lights.set_pixel(6,2,0,255,0)
+	lights.set_pixel(6,3,0,255,0)
+	lights.set_pixel(6,4,0,255,0)
+	lights.set_pixel(5,4,0,255,0)
+	lights.set_pixel(4,4,0,255,0)
+	lights.set_pixel(4,5,0,255,0)
+	lights.set_pixel(4,6,0,255,0)
+	lights.set_pixel(5,6,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+
+def s_three():
+	lights.set_pixel(4,2,0,255,0)
+	lights.set_pixel(5,2,0,255,0)
+	lights.set_pixel(6,2,0,255,0)
+	lights.set_pixel(6,3,0,255,0)
+	lights.set_pixel(6,4,0,255,0)
+	lights.set_pixel(5,4,0,255,0)
+	lights.set_pixel(4,4,0,255,0)
+	lights.set_pixel(6,5,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+	lights.set_pixel(4,6,0,255,0)
+	lights.set_pixel(5,6,0,255,0)
+	
+def s_four():
+	lights.set_pixel(4,2,0,255,0)
+	lights.set_pixel(4,3,0,255,0)
+	lights.set_pixel(4,4,0,255,0)
+	lights.set_pixel(5,4,0,255,0)
+	lights.set_pixel(6,4,0,255,0)
+	lights.set_pixel(6,3,0,255,0)
+	lights.set_pixel(6,2,0,255,0)
+	lights.set_pixel(6,5,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+	
+def s_five():
+	lights.set_pixel(4,2,0,255,0)
+	lights.set_pixel(5,2,0,255,0)
+	lights.set_pixel(6,2,0,255,0)
+	lights.set_pixel(4,3,0,255,0)
+	lights.set_pixel(4,4,0,255,0)
+	lights.set_pixel(5,4,0,255,0)
+	lights.set_pixel(6,4,0,255,0)
+	lights.set_pixel(6,5,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+	lights.set_pixel(4,6,0,255,0)
+	lights.set_pixel(5,6,0,255,0)
+	
+def s_six():
+	lights.set_pixel(4,2,0,255,0)
+	lights.set_pixel(4,3,0,255,0)
+	lights.set_pixel(4,4,0,255,0)
+	lights.set_pixel(4,5,0,255,0)
+	lights.set_pixel(4,6,0,255,0)
+	lights.set_pixel(5,6,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+	lights.set_pixel(6,5,0,255,0)
+	lights.set_pixel(6,4,0,255,0)
+	lights.set_pixel(5,4,0,255,0)
+	
+def s_seven():
+	lights.set_pixel(4,2,0,255,0)
+	lights.set_pixel(5,2,0,255,0)
+	lights.set_pixel(6,2,0,255,0)
+	lights.set_pixel(6,3,0,255,0)
+	lights.set_pixel(6,4,0,255,0)
+	lights.set_pixel(6,5,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+
+def s_eight():
+	lights.set_pixel(4,2,0,255,0)
+	lights.set_pixel(5,2,0,255,0)
+	lights.set_pixel(6,2,0,255,0)
+	lights.set_pixel(6,3,0,255,0)
+	lights.set_pixel(6,4,0,255,0)
+	lights.set_pixel(5,4,0,255,0)
+	lights.set_pixel(4,4,0,255,0)
+	lights.set_pixel(4,5,0,255,0)
+	lights.set_pixel(4,6,0,255,0)
+	lights.set_pixel(5,6,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+	lights.set_pixel(4,3,0,255,0)
+	lights.set_pixel(6,5,0,255,0)
+	
+	
+def s_nine():
+	lights.set_pixel(4 ,2,0,255,0)
+	lights.set_pixel(5,2,0,255,0)
+	lights.set_pixel(6,2,0,255,0)
+	lights.set_pixel(6,3,0,255,0)
+	lights.set_pixel(6,4,0,255,0)
+	lights.set_pixel(5,4,0,255,0)
+	lights.set_pixel(4,4,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+	lights.set_pixel(4,3,0,255,0)
+	lights.set_pixel(6,5,0,255,0)
+	
+	
+def s_zero():
+	lights.set_pixel(4,2,0,255,0)
+	lights.set_pixel(5,2,0,255,0)
+	lights.set_pixel(6,2,0,255,0)
+	lights.set_pixel(6,3,0,255,0)
+	lights.set_pixel(6,4,0,255,0)
+	lights.set_pixel(5,4,0,255,0)
+	lights.set_pixel(4,4,0,255,0)
+	lights.set_pixel(4,6,0,255,0)
+	lights.set_pixel(5,6,0,255,0)
+	lights.set_pixel(6,6,0,255,0)
+	lights.set_pixel(4,3,0,255,0)
+	lights.set_pixel(6,5,0,255,0)
+	
+def deg():
+	lights.set_pixel(7,0,255,255,255)
 
 def get_next_event(search_limit):
     global has_error
@@ -357,10 +602,7 @@ def get_next_event(search_limit):
     # if we got this far and haven't returned anything, then there's no appointments in the specified time
     # range, or we had an error, so...
     return None
-import unicornhat as unicorn
-import time
-import datetime
-import requests
+
 
 # Function to display temperature on Unicorn HAT
 def display_temperature(temp):
@@ -377,32 +619,252 @@ def display_temperature(temp):
         num1 = 0
         num2 = int(temp)
 
-    # Set Unicorn HAT colors
-    R = (255, 0, 0) # Red
-    Y = (255, 255, 0) # Yellow
-    G = (0, 255, 0) # Green
-    B = (0, 0, 255) # Blue
-    O = (255, 140, 0) # Orange
-
-    # Set color for each digit on the Unicorn HAT
-    colors = {
-        0: R,
-        1: Y,
-        2: G,
-        3: B,
-        4: O,
-        5: R,
-        6: Y,
-        7: G,
-        8: B,
-        9: O
-    }
-
     # Display the two digits on the Unicorn HAT
-    unicorn.clear()
-    unicorn.set_pixel(2, 0, colors[num1][0], colors[num1][1], colors[num1][2])
-    unicorn.set_pixel(5, 0, colors[num2][0], colors[num2][1], colors[num2][2])
-    unicorn.show()
+    lights.clear()
+    ##add logic here for numbers
+    if num1 == 0:
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    elif num1 == 1:
+        f_one()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    elif num1 == 2:
+        f_two()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    elif num1 == 2:
+        f_two()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    elif num1 == 3: 
+        f_three()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    elif num1 == 4:
+        f_four()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    elif num1 == 5:
+        f_five()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    elif num1 == 6:
+        f_six()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    elif num1 == 7:
+        f_seven()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    elif num1 == 8:
+        f_eight()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    else:
+        f_nine()
+        if num2 == 0:
+            s_zero()
+        elif num2 == 1:
+            s_one()
+        elif num2 == 2:
+            s_two()
+        elif num2 == 3:
+            s_three()
+        elif num2 == 4:
+            s_four()
+        elif num2 == 5:
+            s_five()
+        elif num2 == 6:
+            s_six()
+        elif num2 == 7:
+            s_seven()
+        elif num2 == 8:
+            s_eight()
+        else:
+            s_nine()
+    deg()
+    lights.show()
 
 
 def main():
@@ -430,6 +892,7 @@ def main():
         if current_minute != last_minute:
             # reset last_minute to the current_minute
             last_minute = current_minute
+            num_minutes = 16
             # we've moved a minute, so we have work to do
             # get the next calendar event (within the specified time limit [in minutes])
             next_event = get_next_event(10)
@@ -440,6 +903,9 @@ def main():
                     print('Starts in {} minutes\n'.format(num_minutes))
                 else:
                     print('Starts in 1.0 minute\n')
+                    r = requests.get('http://api.weatherstack.com/current?access_key=568a51fcb2400c0531e124cd508c373e&query=Seattle')
+                    data = r.json()
+                    temperature = data['current']['temperature']
                 # is the appointment between 10 and 5 minutes from now?
                 if num_minutes >= FIRST_THRESHOLD:
                     # Flash the lights in WHITE
@@ -455,15 +921,12 @@ def main():
                 # hmmm, less than 2 minutes, almost time to start!
                 else:
                     # swirl the lights. Longer every second closer to start time
-                    do_swirl(int((4 - num_minutes) * 100))
+                    print('do nothing bro')
                     # set the activity light to SUCCESS_COLOR (green by default)
-                    set_activity_light(ORANGE, False)
             # check the temperature if the next meeting is more than 15 minutes away
             elif num_minutes > 15:
                 # get the latest temperature
-                r = requests.get('http://api.weatherstack.com/current?access_key=568a51fcb2400c0531e124cd508c373e&query=Seattle')
-                data = r.json()
-                temperature = data['current']['temperature'] 
+                
                 # display the temperature on the unicorn pi hat
                 display_temperature(temperature)
         # wait a second then check again
@@ -473,8 +936,8 @@ def main():
 # now tell the user what we're doing...
 print('\n')
 print(HASHES)
-print(HASH, 'Office Helper', HASH)
-print(HASH, 'By Elliott Wills', HASH)
+print(HASH, 'Reminder and Weather bot                        ', HASH)
+print(HASH, 'By Elliott Wills @ Elliottjwills.com', HASH)
 print(HASHES)
 
 # output whether reboot mode is enabled
@@ -488,7 +951,7 @@ current_activity_light = 8
 
 # Set a specific brightness level for the Pimoroni Unicorn HAT, otherwise it's pretty bright.
 # Comment out the line below to see what the default looks like.
-lights.brightness(0.75)
+lights.brightness(0.5)
 
 # flash some random LEDs just for fun...
 flash_random(5, 0.1)
@@ -498,10 +961,9 @@ flash_all(1, 1, GREEN)
 try:
     # Initialize the Google Calendar API stuff
     print('Initializing the Google Calendar API')
-    socket.setdefaulttimeout(10)  # 10 seconds
-    credentials = get_credentials()
-    http = credentials.authorize(httplib2.Http())
-    service = discovery.build('calendar', 'v3', http=http)
+    socket.setdefaulttimeout(50)  # 10 seconds
+    creds = get_credentials()
+    service = build('calendar', 'v3', credentials=creds)
 except Exception as e:
     print('\nException type:', type(e))
     # not much else we can do here except to skip this attempt and try again later
